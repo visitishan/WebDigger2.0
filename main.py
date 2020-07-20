@@ -4,6 +4,8 @@ Created on Wed Jul 15 20:01:06 2020
 
 @author: ishan.m.jain
 """
+#https://github.com/IgorRidanovic/kivy-radio-button/blob/master/radiobutton.kv
+
 
 # -*- coding: cp1252 -*-
 from kivy.app import App
@@ -35,30 +37,92 @@ Builder.load_string("""
             
     search: last_name
     
-    orientation: "vertical"
-    BoxLayout:
-        height: "60dp"
+    RelativeLayout:
         size_hint_y: None
         padding: 10
-        pos: 0,300
         
         TextInput:
             id: last_name
-            size_hint_x: 40
+            size_hint_x: 0.75
+            size_hint_y: 0.4
             multiline: False
             readonly: False
             foreground_color: [1, 1, 1, 1]
             background_color: (0,0,0,0.3)
+            pos_hint: {"x":0.005, "y":3}
+            
                                     
             
         Button:
             text: "Search"
-            size_hint_x: 25
+            size_hint_x: 0.25
+            size_hint_y: 0.4
+            pos_hint: {"right":0.995, "y":3}
             on_press: 
                 root.manager.transition.direction = 'left' 
                 root.manager.transition.duration = 1 
                 root.manager.current = 'settings'
                 root.fetch_searchterm()
+        
+        
+        CheckBox:
+			id: rbutton1
+			group: 'radio button'
+			size_hint_x: 0.05
+            pos_hint: {"x":0.02, "y":2.4}
+            
+        Label:
+            size_hint_x: None
+            text: "Video"
+            pos_hint: {"x":0.05, "y":2.4}
+            color: 0,0,0,1
+
+
+		CheckBox:
+			id: rbutton2
+			group: 'radio button'
+            size_hint_x: 0.05
+            pos_hint: {"x":0.15, "y":2.4}
+        Label:
+            size_hint_x: None
+            text: "Audio"
+            pos_hint: {"x":0.17, "y":2.4}
+            color: 0,0,0,1
+        
+        CheckBox:
+			id: rbutton3
+			group: 'radio button'
+            size_hint_x: 0.05
+            pos_hint: {"x":0.27, "y":2.4}
+        Label:
+            size_hint_x: None
+            text: "Document"
+            pos_hint: {"x":0.30, "y":2.4}
+            color: 0,0,0,1
+        
+        CheckBox:
+			id: rbutton4
+			group: 'radio button'
+            size_hint_x: 0.05
+            pos_hint: {"x":0.40, "y":2.4}
+        Label:
+            size_hint_x: None
+            text: "Software"
+            pos_hint: {"x":0.42, "y":2.4}
+            color: 0,0,0,1
+        
+        CheckBox:
+			id: rbutton5
+			group: 'radio button'
+            size_hint_x: 0.05
+            pos_hint: {"x":0.52, "y":2.4}
+        Label:
+            size_hint_x: None
+            text: "Image"
+            pos_hint: {"x":0.54, "y":2.4}
+            color: 0,0,0,1
+
+        
 
 
 <SettingsScreen>:
@@ -66,62 +130,45 @@ Builder.load_string("""
         Rectangle:
             pos: self.pos
             size: self.size
-            source: 'bg2.jpg'
+            source: 'bg4.jpg'
             
     orientation: "vertical"
     
-    BoxLayout: 
+    RelativeLayout: 
         padding: 10
         
         TextInput:
             id: outbox
             readonly: True
+            text: 'asdlf'
+            size_hint_x: 0.8
+            size_hint_y: 0.97
+            pos_hint: {"x":0.005, "y":0}
+            foreground_color: [1, 1, 1, 1]
+            background_color: (0,0,0,0.3)
             
             
         Button: 
             text: "Go Back" 
-            height: "60dp"
             background_color : 1, 1, 1, 1 
+            size_hint_x: 0.1
+            size_hint_y: 0.4
+            pos_hint: {"right":0.995, "y":0}
             on_press: 
                 root.manager.transition.direction = 'left' 
                 root.manager.transition.duration = 1 
                 root.manager.current = 'menu' 
         
-<CustomDropDown>:
 
-    Button:
-        id: btn
-        text: 'Press'
-        on_release: dropdown.open(self)
-        size_hint_y: None
-        height: '48dp'
-
-    DropDown:
-
-        id: dropdown
-        on_parent: self.dismiss()
-        on_select: btn.text = '{}'.format(args[1])
-
-        Button:
-            text: 'First Item'
-            size_hint_y: None
-            height: '48dp'
-            on_release: dropdown.select('First Item')
-
-        Label:
-            text: 'Second Item'
-            size_hint_y: None
-            height: '48dp'
-
-        Button:
-            text: 'Third Item'
-            size_hint_y: None
-            height: '48dp'
-            on_release: dropdown.select('Third Item')
             
 """)
 
-
+#height: "60dp"
+#        size_hint_y: None
+#        padding: 10
+#        pos: 0,300
+#        cols: 2
+        
 #text: outbox.text = searchbox.text
 
 class MenuScreen(Screen):
@@ -142,6 +189,38 @@ class SettingsScreen(Screen):
     pass
 
 
+
+class RadioButton(Widget):
+	# State labels
+	slabel1 = StringProperty()
+	slabel2 = StringProperty()
+
+	def savedstate(self):
+		# Here we can retrieve user saved radio button state if one exists
+		# Assign optional label values
+		self.slabel1 = 'On'
+		self.slabel2 = 'Off'
+		return ['down', 'normal']
+
+	def switchstate1(self):
+		# Switch radio button 1 on and process event trigger
+		# Force 'down' state to avoid deselecting all radio buttons (Kivy thing)
+		self.ids.rbutton1.state = 'down'
+		# Update optional label values
+		self.slabel1 = 'on'
+		self.slabel2 = 'off'
+		print(self.ids.rbutton1.state, self.ids.rbutton2.state)
+
+	def switchstate2(self):
+		# Switch radio button 2 on and process event trigger
+		# Force 'down' state to avoid deselecting all radio buttons (Kivy thing)
+		self.ids.rbutton2.state = 'down'
+		# Update optional label values
+		self.slabel1 = 'off'
+		self.slabel2 = 'on'
+		print(self.ids.rbutton1.state, self.ids.rbutton2.state)
+
+
 #class CustomDropDown(DropDown): 
 #    pass
 
@@ -155,6 +234,7 @@ sm.add_widget(SettingsScreen(name='settings'))
 
 class TestApp(App):
     def build(self):
+        #print(self.)
         return sm
 
 if __name__ == '__main__':
