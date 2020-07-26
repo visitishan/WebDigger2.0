@@ -23,33 +23,54 @@ from kivy.properties import StringProperty, ObjectProperty, ListProperty
 from kivy.uix.dropdown import DropDown
 from kivy.uix.recycleview import RecycleView
 
+from kivy.uix.dropdown import DropDown 
+# another way used to run kivy app  
+#from kivy.base import runTouchApp 
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.spinner import Spinner, SpinnerOption 
+
+
+
 from digger import WebDigger
 dg = WebDigger()
 
 
 class MenuScreen(Screen):
     choice = StringProperty(' ')
+    #CustomDropDown = CustomDropDown()
+    def spinner_clicked(self, value): 
+        print("Language selected is " + value)
+        self.setChoice(value)
 
     def setChoice(self, fileType):
-        self.choice = fileType
+        #self.choice = fileType
+        if fileType == "Video":
+            self.choice = "1"
+        elif fileType == "Audio":
+            self.choice = "2"
+        elif fileType == "Document":
+            self.choice = "3"
+        elif fileType == "Software":
+            self.choice = "4"
+        elif fileType == "Image":
+            self.choice = "5"
+         
         print("Button : ",self.choice)
+        
+    
+    pass
+
 
 
 class SettingsScreen(Screen):
-    # results = ObjectProperty()
-    # def __init__(self, **kwargs):
-    # 	super(SettingsScreen, self).__init__(**kwargs)
-    # 	self.rv.data = []
+    
 
     res = ListProperty()
 
     def fetch_searchterm(self, searchTerm, fileType):
         print(searchTerm,' ',fileType)
         urls = dg.startFunc(searchTerm, fileType)
-        # res_urls = str(urls)
-        # res_urls = res_urls.replace(",",",\n")
-        # self.results.text = res_urls
-        # print(urls)
+        
         [self.res.append({
             'text': url, 
             'readonly': True, 
@@ -57,17 +78,22 @@ class SettingsScreen(Screen):
             'background_color': (0,0,0,0.3),
             'size_hint_x':0.8,
             }) for url in urls]
-        # print(self.res)
     pass
 
 
-class RadioButton(Widget):
-    pass
+#class SpinnerOptions(SpinnerOption):
+#    def __init__(self, **kwargs):
+#        super(SpinnerOptions, self).__init__(**kwargs)
+#        self.background_normal = ''
+#        self.background_color = [0, 0, 1, 1]    # blue colour
+
+
 
 class ScreenManagement(ScreenManager):
     pass
 
 class TestApp(App):
+    title = 'WebDigger'
     def build(self):
         return ScreenManagement()
 

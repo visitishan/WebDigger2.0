@@ -1,6 +1,8 @@
 #:kivy 1.8.0
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
 #: import SlideTransition kivy.uix.screenmanager.SlideTransition
+#:import Factory kivy.factory.Factory
+
 
 <ScreenManagement>:
     MenuScreen:
@@ -41,94 +43,42 @@
             size_hint_x: 0.25
             size_hint_y: 0.4
             pos_hint: {"right":0.995, "y":3}
+            background_color: [0, 0, 0, 0.7]
             on_press: 
                 app.root.transition = SlideTransition(direction='left', duration=1)
                 app.root.ids.settings_screen.fetch_searchterm(root.search.text, root.choice)
                 app.root.current = 'settings'
         
-        CheckBox:
-			id: Video
-			group: 'radio button'
-			size_hint_x: 0.02
-            color: 0,0,0,0.9
-            pos_hint: {"x":0.02, "y":2.2}
-            on_press: root.setChoice('1')
-        Label:
-            size_hint_x: None
-            text: "Video"
-            pos_hint: {"x":0.01, "y":2.2}
-            color: 0,0,0,1
-
-		CheckBox:
-			id: Audio
-			group: 'radio button'
-            size_hint_x: 0.02
-            color: 0,0,0,0.9
-            pos_hint: {"x":0.13, "y":2.2}
-            on_press: root.setChoice('2')
-        Label:
-            size_hint_x: None
-            text: "Audio"
-            pos_hint: {"x":0.12, "y":2.2}
-            color: 0,0,0,1
         
-        CheckBox:
-			id: Document
-			group: 'radio button'
-            size_hint_x: 0.02
-            color: 0,0,0,0.9
-            pos_hint: {"x":0.25, "y":2.2}
-            on_press: root.setChoice('3')
-        Label:
-            size_hint_x: None
-            text: "Document"
-            pos_hint: {"x":0.26, "y":2.2}
-            color: 0,0,0,1
+        # creating the spinner 
+        Spinner: 
+            # Assigning id  
+            id: spinner_id 
+      
+            # Callback  
+            on_text: root.spinner_clicked(spinner_id.text) 
+      
+            # initially text on spinner 
+            text: "Select file type"
+      
+            # total values on spinner 
+            values: ["Video","Audio","Document","Software","Image"] 
+      
+            # declaring size of the spinner 
+            # and the position of it 
+            size_hint: None, None
+            size: 200, 50
+            pos_hint:{'center_x':.5, 'center_y': 2}
+            foreground_color: [1, 1, 1, 1]
+            background_color: (0,0,0,0.9)
+            option_cls: Factory.SpinnerOptions
+            
+<SpinnerOptions@SpinnerOption>:
+    background_color: [0, 0, 0, 0.7]
         
-        CheckBox:
-			id: Software
-			group: 'radio button'
-            size_hint_x: 0.02
-            color: 0,0,0,0.9
-            pos_hint: {"x":0.40, "y":2.2}
-            on_press: root.setChoice('4')
-        Label:
-            size_hint_x: None
-            text: "Software"
-            pos_hint: {"x":0.41, "y":2.2}
-            color: 0,0,0,1
-        
-        CheckBox:
-			id: Image
-			group: 'radio button'
-            size_hint_x: 0.02
-            color: 0,0,0,0.9
-            pos_hint: {"x":0.54, "y":2.2}
-            on_press: root.setChoice('5')
-        Label:
-            size_hint_x: None
-            text: "Image"
-            pos_hint: {"x":0.53, "y":2.2}
-            color: 0,0,0,1
-
-#        CheckBox:
-#            id: Custom
-#            group: 'radio button'
-#            size_hint_x: 0.02
-#            color: 0,0,0,0.9
-#            pos_hint: {"x":0.65, "y":2.2}
-#            on_press: root.setChoice('6')
-#        Label:
-#            size_hint_x: None
-#            text: "Custom"
-#            pos_hint: {"x":0.65, "y":2.2}
-#            color: 0,0,0,1
 
 
-<ListDisp>:
-	orientation: "horizaontal"
-	Label:
-		text: str(root.res_url)
+
 
 <SettingsScreen>:
     canvas.before:
@@ -139,7 +89,6 @@
     
     orientation: "vertical"
 
-#    results: outbox
 
     RelativeLayout: 
         padding: 10
@@ -154,21 +103,11 @@
 	    		size_hint_y: None
 	    		height: self.minimum_height
 	    		orientation: 'vertical'
-
-#        TextInput:
-#            id: outbox
-#            readonly: True
-#            text: ""
-#            size_hint_x: 0.8
-#            size_hint_y: 0.97
-#            pos_hint: {"x":0.005, "y":0}
-#            foreground_color: [1, 1, 1, 1]
-#            background_color: (0,0,0,0.3)
             
             
         Button: 
             text: "Go Back" 
-            background_color : 1, 1, 1, 1 
+            background_color: [0, 0, 0, 0.7]
             size_hint_x: 0.1
             size_hint_y: 0.4
             pos_hint: {"right":0.995, "y":0}
