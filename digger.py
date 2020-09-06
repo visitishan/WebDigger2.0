@@ -5,8 +5,7 @@ from scrapy.http import HtmlResponse
 
 class WebDigger:
 	def __init__(self):
-		self.headers = {
-			'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"}
+		self.headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36"}
 
 		self.finalList = []
 		self.weblinks = []
@@ -28,7 +27,7 @@ class WebDigger:
 
 	def startFunc(self, searchTerm, contenttype):
 		self.searchTerm = searchTerm
-
+		# Name of file to be searched - Search Term
 		if contenttype == '1':
 			self.curChoice = self.ext1
 		elif contenttype == '2':
@@ -39,13 +38,13 @@ class WebDigger:
 			self.curChoice = self.ext4
 		elif contenttype == '5':
 			self.curChoice = self.ext5
-		# elif contenttype == '6':
-		# 	ext6 = input(
-		# 		"\nEnter file extensions seperated by comma(,) -                 			For ex: txt,jpg,mp3\n\t")
-		# 	ext6 = ext6.replace(',', ' ')
-		# 	ext6 = ext6.split(' ')
-		# 	ext6 = tuple(ext6)
-		# 	ext = ext6
+		elif contenttype == '6':
+			ext6 = input(
+				"\nEnter file extensions seperated by comma(,) -                 			For ex: txt,jpg,mp3\n\t")
+			ext6 = ext6.replace(',', ' ')
+			ext6 = ext6.split(' ')
+			ext6 = tuple(ext6)
+			self.curChoice = ext6
 
 		try:
 			self.start_search_list_parse(self.searchTerm, self.curChoice)
@@ -59,9 +58,11 @@ class WebDigger:
 		search_url = self.google_page_seach_url_format.format(searchTerm.lower(), '%7C'.join(ext))
 
 		search_res = requests.get(search_url, headers=self.headers)
-		resp = HtmlResponse(url=search_url, body=search_res.text, encoding='utf-8')	
+		resp = HtmlResponse(url=search_url, body=search_res.text, encoding='utf-8')
+	
 		for res_url in resp.xpath(self.search_result_link_xpath):
 			url = res_url.get().strip()
+			print(url)
 			self.weblinks.append(url)
 
 		self.start_web_link_parse(self.weblinks)
@@ -71,7 +72,7 @@ class WebDigger:
 	def start_web_link_parse(self, web_links):
 		for web_url in web_links:
 			try:
-				url_res = requests.get(web_url, headers=self.headers, timeout=90)
+				url_res = requests.get(web_url, headers=self.headers, timeout=40)
 				if url_res.status_code != 200:
 					raise ''
 				resp = HtmlResponse(url=web_url, body=url_res.text, encoding='utf-8')
@@ -81,13 +82,18 @@ class WebDigger:
 
 			if resp != '':
 				for res_url in resp.xpath(self.url_extract_xpath):
-					url = res_url.get().strip()
-					if url[-1] == '/':
-						self.start_web_link_parse(url)
-					
+					url = res_url.get().strip()				
 					if url[0] == '/' and url_res.url[-1] == '/':
 						url = url[1:]
-					url = url_res.url + url
+					
+					if url[:4] != 'http':
+						url = url_res.url + url
+					else:
+						continue
+
+					if url[-1] == '/':
+						self.start_web_link_parse([url])
+					
 					self.matcher(url)
 
 
@@ -107,8 +113,9 @@ class WebDigger:
 				count += 1
 
 		if count == num_of_words:
+			temp_url_list = temp_url.split(' ')
 			for ext in self.curChoice:
-				if ext.lower() in temp_url.lower():
+				if ext.lower() == temp_url_list[-1].lower():
 					print(url)
 					self.finalList.append(url)
 

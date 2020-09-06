@@ -39,7 +39,6 @@ class MenuScreen(Screen):
     choice = StringProperty(' ')
     #CustomDropDown = CustomDropDown()
     def spinner_clicked(self, value): 
-        print("Language selected is " + value)
         self.setChoice(value)
 
     def setChoice(self, fileType):
@@ -68,9 +67,7 @@ class SettingsScreen(Screen):
     res = ListProperty()
 
     def fetch_searchterm(self, searchTerm, fileType):
-        print(searchTerm,' ',fileType)
         urls = dg.startFunc(searchTerm, fileType)
-        
         [self.res.append({
             'text': url, 
             'readonly': True, 
